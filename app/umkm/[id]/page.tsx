@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/server'
 import { UMKM, Product } from '@/types'
 import { notFound } from 'next/navigation'
 import UMKMDetail from '@/components/public/UMKNDetails'
@@ -6,8 +6,7 @@ import UMKMDetail from '@/components/public/UMKNDetails'
 export const dynamic = 'force-dynamic'
 
 async function getUMKMWithProducts(id: string) {
-    const supabase = createClient()
-
+    const supabase = await createClient()
     const { data: umkm, error: umkmError } = await supabase
         .from('umkm')
         .select('*')
@@ -31,9 +30,9 @@ async function getUMKMWithProducts(id: string) {
     }
 }
 
-export default async function UMKMPage({ params }: { params: { id: string } }) {
-    const data = await getUMKMWithProducts(params.id)
-
+export default async function UMKMPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params
+    const data = await getUMKMWithProducts(id)
     if (!data) {
         notFound()
     }

@@ -1,12 +1,12 @@
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/server'
 import { UMKM } from '@/types'
 import UMKMCard from '@/components/public/UMKMCard'
 
 export const dynamic = 'force-dynamic'
 
 async function getUMKMs() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data, error } = await supabase
     .from('umkm')
     .select('*')
