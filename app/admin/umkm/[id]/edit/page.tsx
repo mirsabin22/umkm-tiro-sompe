@@ -96,12 +96,12 @@ export default function EditUMKM() {
         reader.readAsDataURL(file)
     }
 
-    const handleMapsLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleMapsLinkChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const link = e.target.value
         setFormData({ ...formData, maps_link: link })
 
         if (link && isValidGoogleMapsLink(link)) {
-            const coords = parseGoogleMapsLink(link)
+            const coords = await parseGoogleMapsLink(link)
             if (coords) {
                 setFormData(prev => ({
                     ...prev,
@@ -115,7 +115,6 @@ export default function EditUMKM() {
             }
         }
     }
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)

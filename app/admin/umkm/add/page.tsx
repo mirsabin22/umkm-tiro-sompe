@@ -58,13 +58,13 @@ export default function AddUMKM() {
         reader.readAsDataURL(file)
     }
 
-    const handleMapsLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleMapsLinkChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const link = e.target.value
         setFormData({ ...formData, maps_link: link })
 
         // Auto-parse coordinates
         if (link && isValidGoogleMapsLink(link)) {
-            const coords = parseGoogleMapsLink(link)
+            const coords = await parseGoogleMapsLink(link)
             if (coords) {
                 setFormData(prev => ({
                     ...prev,

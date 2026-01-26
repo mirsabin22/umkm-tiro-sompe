@@ -31,7 +31,7 @@ export default async function Home() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold">UMKM Tiro Sompe</h1>
+              <h1 className="text-2xl md:text-3xl font-bold">UMKM TiroSompe</h1>
               <p className="text-emerald-100 text-sm mt-1">Dukung UMKM Lokal Kami</p>
             </div>
             <Link
@@ -48,7 +48,7 @@ export default async function Home() {
       <main className="container mx-auto px-4 py-8">
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Daftar UMKM</h2>
-          <p className="text-gray-600">Temukan produk lokal terbaik dari Kelurahan Tiro Sompe</p>
+          <p className="text-gray-600">Temukan produk lokal terbaik dari Kelurahan Tirosompe</p>
         </div>
 
         {umkms.length === 0 ? (
@@ -67,7 +67,9 @@ export default async function Home() {
       {/* Footer */}
       <footer className="bg-gray-800 text-white mt-16 py-8">
         <div className="container mx-auto px-4 text-center">
-          <p>&copy; 2025 UMKM Tiro Sompe - KKN Digitalisasi UMKM</p>
+          <p>&copy;2025 Kelurahan Tirosompe, Kota Parepare. Seluruh hak cipta dilindungi.
+          </p>
+          <p> Website dikembangkan sebagai bagian dari Program KKN Unhas Gelombang 115</p>
         </div>
       </footer>
     </div>

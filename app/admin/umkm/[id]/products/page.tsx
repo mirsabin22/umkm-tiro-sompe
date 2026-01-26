@@ -375,14 +375,16 @@ export default function ManageProducts() {
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {products.map((product) => (
-                                <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                                    <div className="relative h-40 bg-gray-200">
+                                <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
+                                    {/* Image - Fixed Height */}
+                                    <div className="relative w-full h-40 bg-gray-200 flex-shrink-0">
                                         {product.image_url ? (
                                             <Image
                                                 src={product.image_url}
                                                 alt={product.name}
                                                 fill
                                                 className="object-cover"
+                                                sizes="(max-width: 768px) 100vw, 50vw"
                                             />
                                         ) : (
                                             <div className="flex items-center justify-center h-full text-gray-400">
@@ -391,32 +393,40 @@ export default function ManageProducts() {
                                         )}
                                     </div>
 
-                                    <div className="p-4">
-                                        <h3 className="font-bold text-gray-800 mb-1">{product.name}</h3>
-                                        {product.description && (
-                                            <p className="text-sm text-gray-600 mb-2 line-clamp-2">{product.description}</p>
-                                        )}
-                                        <p className="text-emerald-600 font-bold mb-2">
-                                            Rp {product.price.toLocaleString('id-ID')}
-                                        </p>
-                                        <span className={`inline-block text-xs px-2 py-1 rounded mb-3 ${product.status === 'AVAILABLE'
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-red-100 text-red-800'
-                                            }`}>
-                                            {product.status}
-                                        </span>
+                                    {/* Content - Flex Grow */}
+                                    <div className="p-4 flex-grow flex flex-col">
+                                        <div className="flex-grow">
+                                            <h3 className="font-bold text-gray-800 mb-1 line-clamp-2 min-h-[3rem]">
+                                                {product.name}
+                                            </h3>
+                                            {product.description && (
+                                                <p className="text-sm text-gray-600 mb-2 line-clamp-2 min-h-[2.5rem]">
+                                                    {product.description}
+                                                </p>
+                                            )}
+                                            <p className="text-emerald-600 font-bold mb-2">
+                                                Rp {product.price.toLocaleString('id-ID')}
+                                            </p>
+                                            <span className={`inline-block text-xs px-2 py-1 rounded mb-3 ${product.status === 'AVAILABLE'
+                                                    ? 'bg-green-100 text-green-800'
+                                                    : 'bg-red-100 text-red-800'
+                                                }`}>
+                                                {product.status}
+                                            </span>
+                                        </div>
 
-                                        <div className="flex gap-2">
+                                        {/* Action Buttons - Fixed at Bottom */}
+                                        <div className="flex gap-2 mt-auto">
                                             <button
                                                 onClick={() => handleEdit(product)}
-                                                className="flex items-center bg-yellow-600 text-white px-3 py-1 rounded text-sm hover:bg-yellow-700 transition"
+                                                className="flex items-center justify-center flex-1 bg-yellow-600 text-white px-3 py-2 rounded text-sm hover:bg-yellow-700 transition"
                                             >
                                                 <Edit className="w-4 h-4 mr-1" />
                                                 Edit
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(product.id)}
-                                                className="flex items-center bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition"
+                                                className="flex items-center justify-center flex-1 bg-red-600 text-white px-3 py-2 rounded text-sm hover:bg-red-700 transition"
                                             >
                                                 <Trash2 className="w-4 h-4 mr-1" />
                                                 Hapus

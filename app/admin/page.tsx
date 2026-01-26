@@ -52,7 +52,7 @@ export default function AdminLogin() {
                         <Lock className="w-8 h-8 text-emerald-600" />
                     </div>
                     <h1 className="text-3xl font-bold text-gray-800">Admin Panel</h1>
-                    <p className="text-gray-600 mt-2">UMKM Tiro Sompe</p>
+                    <p className="text-gray-600 mt-2">UMKM TiroSompe</p>
                 </div>
 
                 <form onSubmit={handleLogin} className="space-y-6">
