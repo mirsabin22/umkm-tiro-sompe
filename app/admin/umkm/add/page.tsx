@@ -3,9 +3,12 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Upload, MapPin } from 'lucide-react'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
+import { uploadImage, validateImageFile } from '@/utils/imageupload'
+import { parseGoogleMapsLink, isValidGoogleMapsLink } from '@/utils/mapsParser'
+import Image from 'next/image'
 
 export default function AddUMKM() {
     const [formData, setFormData] = useState({
@@ -15,12 +18,16 @@ export default function AddUMKM() {
         phone: '',
         whatsapp: '',
         address: '',
+        maps_link: '',
         latitude: '',
         longitude: '',
         image_url: '',
         status: 'ACTIVE'
     })
+    const [imageFile, setImageFile] = useState<File | null>(null)
+    const [imagePreview, setImagePreview] = useState<string>('')
     const [loading, setLoading] = useState(false)
+    const [uploadingImage, setUploadingImage] = useState(false)
     const router = useRouter()
 
     useEffect(() => {
@@ -30,30 +37,93 @@ export default function AddUMKM() {
         }
     }, [router])
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        // Validate image
+        const error = validateImageFile(file)
+        if (error) {
+            toast.error(error)
+            return
+        }
+
+        setImageFile(file)
+
+        // Create preview
+        const reader = new FileReader()
+        reader.onloadend = () => {
+            setImagePreview(reader.result as string)
+        }
+        reader.readAsDataURL(file)
+    }
+
+    const handleMapsLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const link = e.target.value
+        setFormData({ ...formData, maps_link: link })
+
+        // Auto-parse coordinates
+        if (link && isValidGoogleMapsLink(link)) {
+            const coords = parseGoogleMapsLink(link)
+            if (coords) {
+                setFormData(prev => ({
+                    ...prev,
+                    maps_link: link,
+                    latitude: coords.latitude.toString(),
+                    longitude: coords.longitude.toString()
+                }))
+                toast.success('Koordinat berhasil di-extract!')
+            } else {
+                toast.error('Gagal extract koordinat dari link. Silakan input manual.')
+            }
+        }
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
 
-        const supabase = createClient()
-        const { error } = await supabase.from('umkm').insert([{
-            name: formData.name,
-            description: formData.description || null,
-            category: formData.category || null,
-            phone: formData.phone,
-            whatsapp: formData.whatsapp,
-            address: formData.address,
-            latitude: formData.latitude ? parseFloat(formData.latitude) : null,
-            longitude: formData.longitude ? parseFloat(formData.longitude) : null,
-            image_url: formData.image_url || null,
-            status: formData.status
-        }])
+        try {
+            let imageUrl = formData.image_url
 
-        if (error) {
-            toast('Gagal menambah UMKM!')
-            console.error(error)
-        } else {
-            toast('UMKM berhasil ditambahkan!')
-            router.push('/admin/dashboard')
+            // Upload image if exists
+            if (imageFile) {
+                setUploadingImage(true)
+                const uploadedUrl = await uploadImage(imageFile, 'umkm')
+                setUploadingImage(false)
+
+                if (!uploadedUrl) {
+                    toast.error('Gagal upload gambar!')
+                    setLoading(false)
+                    return
+                }
+                imageUrl = uploadedUrl
+            }
+
+            const supabase = createClient()
+            const { error } = await supabase.from('umkm').insert([{
+                name: formData.name,
+                description: formData.description || null,
+                category: formData.category || null,
+                phone: formData.phone,
+                whatsapp: formData.whatsapp,
+                address: formData.address,
+                latitude: formData.latitude ? parseFloat(formData.latitude) : null,
+                longitude: formData.longitude ? parseFloat(formData.longitude) : null,
+                image_url: imageUrl || null,
+                status: formData.status
+            }])
+
+            if (error) {
+                toast.error('Gagal menambah UMKM!')
+                console.error(error)
+            } else {
+                toast.success('UMKM berhasil ditambahkan!')
+                router.push('/admin/dashboard')
+            }
+        } catch (error) {
+            console.error('Error:', error)
+            toast.error('Terjadi kesalahan!')
         }
 
         setLoading(false)
@@ -82,6 +152,42 @@ export default function AddUMKM() {
                     <h1 className="text-2xl font-bold text-gray-800 mb-6">Tambah UMKM Baru</h1>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
+                        {/* Image Upload */}
+                        <div>
+                            <label className="block text-gray-700 font-semibold mb-2">
+                                Gambar UMKM
+                            </label>
+                            <div className="flex flex-col items-center gap-4">
+                                {imagePreview && (
+                                    <div className="relative w-full h-48 rounded-lg overflow-hidden">
+                                        <Image
+                                            src={imagePreview}
+                                            alt="Preview"
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                )}
+                                <label className="w-full cursor-pointer">
+                                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-emerald-500 transition">
+                                        <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                                        <p className="text-sm text-gray-600">
+                                            {imageFile ? imageFile.name : 'Klik untuk upload gambar'}
+                                        </p>
+                                        <p className="text-xs text-gray-400 mt-1">
+                                            JPG, PNG, atau WebP (max 5MB)
+                                        </p>
+                                    </div>
+                                    <input
+                                        type="file"
+                                        accept="image/jpeg,image/jpg,image/png,image/webp"
+                                        onChange={handleImageChange}
+                                        className="hidden"
+                                    />
+                                </label>
+                            </div>
+                        </div>
+
                         <div>
                             <label className="block text-gray-700 font-semibold mb-2">
                                 Nama UMKM <span className="text-red-500">*</span>
@@ -135,6 +241,7 @@ export default function AddUMKM() {
                                     onChange={handleChange}
                                     placeholder="08123456789"
                                     className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
+                                    required
                                 />
                             </div>
 
@@ -166,6 +273,25 @@ export default function AddUMKM() {
                                 className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                                 required
                             />
+                        </div>
+
+                        {/* Google Maps Link */}
+                        <div>
+                            <label className="block text-gray-700 font-semibold mb-2">
+                                <MapPin className="inline w-4 h-4 mr-1" />
+                                Link Google Maps
+                            </label>
+                            <input
+                                type="text"
+                                name="maps_link"
+                                value={formData.maps_link}
+                                onChange={handleMapsLinkChange}
+                                placeholder="https://maps.google.com/?q=-4.0098,119.6231"
+                                className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
+                            />
+                            <p className="text-xs text-gray-500 mt-1">
+                                Paste link dari Google Maps, koordinat akan otomatis ter-extract
+                            </p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -200,27 +326,13 @@ export default function AddUMKM() {
 
                         <div>
                             <label className="block text-gray-700 font-semibold mb-2">
-                                URL Gambar
-                            </label>
-                            <input
-                                type="url"
-                                name="image_url"
-                                value={formData.image_url}
-                                onChange={handleChange}
-                                placeholder="https://example.com/image.jpg"
-                                className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-gray-700 font-semibold mb-2">
                                 Status
                             </label>
                             <select
                                 name="status"
                                 value={formData.status}
                                 onChange={handleChange}
-                                className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
+                                className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                             >
                                 <option value="ACTIVE">ACTIVE</option>
                                 <option value="INACTIVE">INACTIVE</option>
@@ -230,10 +342,10 @@ export default function AddUMKM() {
                         <div className="flex gap-4 pt-4">
                             <button
                                 type="submit"
-                                disabled={loading}
+                                disabled={loading || uploadingImage}
                                 className="flex-1 bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700 transition disabled:bg-gray-400"
                             >
-                                {loading ? 'Menyimpan...' : 'Simpan'}
+                                {uploadingImage ? 'Uploading gambar...' : loading ? 'Menyimpan...' : 'Simpan'}
                             </button>
                             <Link
                                 href="/admin/dashboard"

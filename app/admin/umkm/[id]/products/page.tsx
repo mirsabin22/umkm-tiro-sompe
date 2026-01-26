@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { UMKM, Product } from '@/types'
-import { ArrowLeft, Plus, Edit, Trash2 } from 'lucide-react'
+import { ArrowLeft, Plus, Edit, Trash2, Upload } from 'lucide-react'
+import { uploadImage, validateImageFile } from '@/utils/imageupload'
 import Link from 'next/link'
 import Image from 'next/image'
 import toast from 'react-hot-toast'
@@ -22,6 +23,9 @@ export default function ManageProducts() {
         image_url: '',
         status: 'AVAILABLE'
     })
+    const [imageFile, setImageFile] = useState<File | null>(null)
+    const [imagePreview, setImagePreview] = useState<string>('')
+    const [uploadingImage, setUploadingImage] = useState(false)
     const router = useRouter()
     const params = useParams()
 
@@ -37,27 +41,26 @@ export default function ManageProducts() {
 
     const fetchData = async () => {
         const supabase = createClient()
+        const { id } = await params
 
-        // Fetch UMKM
         const { data: umkmData, error: umkmError } = await supabase
             .from('umkm')
             .select('*')
-            .eq('id', params.id)
+            .eq('id', id)
             .single()
 
         if (umkmError || !umkmData) {
-            toast('UMKM tidak ditemukan!')
+            toast.error('UMKM tidak ditemukan!')
             router.push('/admin/dashboard')
             return
         }
 
         setUmkm(umkmData as UMKM)
 
-        // Fetch Products
         const { data: productsData, error: productsError } = await supabase
             .from('products')
             .select('*')
-            .eq('umkm_id', params.id)
+            .eq('umkm_id', id)
             .order('created_at', { ascending: false })
 
         if (!productsError) {
@@ -67,45 +70,82 @@ export default function ManageProducts() {
         setLoading(false)
     }
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        const error = validateImageFile(file)
+        if (error) {
+            toast.error(error)
+            return
+        }
+
+        setImageFile(file)
+
+        const reader = new FileReader()
+        reader.onloadend = () => {
+            setImagePreview(reader.result as string)
+        }
+        reader.readAsDataURL(file)
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        const supabase = createClient()
-        const productData = {
-            name: formData.name,
-            description: formData.description || null,
-            price: parseFloat(formData.price),
-            image_url: formData.image_url || null,
-            status: formData.status,
-            umkm_id: params.id
-        }
+        try {
+            let imageUrl = formData.image_url
 
-        let error
+            if (imageFile) {
+                setUploadingImage(true)
+                const uploadedUrl = await uploadImage(imageFile, 'products')
+                setUploadingImage(false)
 
-        if (editingProduct) {
-            // Update
-            const result = await supabase
-                .from('products')
-                .update({ ...productData, updated_at: new Date().toISOString() })
-                .eq('id', editingProduct.id)
-            error = result.error
-        } else {
-            // Insert
-            const result = await supabase
-                .from('products')
-                .insert([productData])
-            error = result.error
-        }
+                if (!uploadedUrl) {
+                    toast.error('Gagal upload gambar!')
+                    return
+                }
+                imageUrl = uploadedUrl
+            }
 
-        if (error) {
-            toast('Gagal menyimpan produk!')
-            console.error(error)
-        } else {
-            toast('Produk berhasil disimpan!')
-            setShowForm(false)
-            setEditingProduct(null)
-            resetForm()
-            fetchData()
+            const supabase = createClient()
+            const { id } = await params
+            const productData = {
+                name: formData.name,
+                description: formData.description || null,
+                price: parseFloat(formData.price),
+                image_url: imageUrl || null,
+                status: formData.status,
+                umkm_id: id
+            }
+
+            let error
+
+            if (editingProduct) {
+                const result = await supabase
+                    .from('products')
+                    .update({ ...productData, updated_at: new Date().toISOString() })
+                    .eq('id', editingProduct.id)
+                error = result.error
+            } else {
+                const result = await supabase
+                    .from('products')
+                    .insert([productData])
+                error = result.error
+            }
+
+            if (error) {
+                toast.error('Gagal menyimpan produk!')
+                console.error(error)
+            } else {
+                toast.success('Produk berhasil disimpan!')
+                setShowForm(false)
+                setEditingProduct(null)
+                resetForm()
+                fetchData()
+            }
+        } catch (error) {
+            console.error('Error:', error)
+            toast.error('Terjadi kesalahan!')
         }
     }
 
@@ -118,6 +158,10 @@ export default function ManageProducts() {
             image_url: product.image_url || '',
             status: product.status
         })
+        if (product.image_url) {
+            setImagePreview(product.image_url)
+        }
+        setImageFile(null)
         setShowForm(true)
     }
 
@@ -131,10 +175,10 @@ export default function ManageProducts() {
             .eq('id', id)
 
         if (error) {
-            alert('Gagal menghapus produk!')
+            toast.error('Gagal menghapus produk!')
             console.error(error)
         } else {
-            alert('Produk berhasil dihapus!')
+            toast.success('Produk berhasil dihapus!')
             fetchData()
         }
     }
@@ -147,6 +191,8 @@ export default function ManageProducts() {
             image_url: '',
             status: 'AVAILABLE'
         })
+        setImageFile(null)
+        setImagePreview('')
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -181,7 +227,6 @@ export default function ManageProducts() {
                     <p className="text-gray-600">UMKM: {umkm?.name}</p>
                 </div>
 
-                {/* Add Product Button */}
                 {!showForm && (
                     <button
                         onClick={() => {
@@ -196,7 +241,6 @@ export default function ManageProducts() {
                     </button>
                 )}
 
-                {/* Form */}
                 {showForm && (
                     <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                         <h2 className="text-xl font-bold text-gray-800 mb-4">
@@ -204,6 +248,42 @@ export default function ManageProducts() {
                         </h2>
 
                         <form onSubmit={handleSubmit} className="space-y-4">
+                            {/* Image Upload */}
+                            <div>
+                                <label className="block text-gray-700 font-semibold mb-2">
+                                    Gambar Produk
+                                </label>
+                                <div className="flex flex-col items-center gap-4">
+                                    {imagePreview && (
+                                        <div className="relative w-full h-48 rounded-lg overflow-hidden">
+                                            <Image
+                                                src={imagePreview}
+                                                alt="Preview"
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        </div>
+                                    )}
+                                    <label className="w-full cursor-pointer">
+                                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-emerald-500 transition">
+                                            <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                                            <p className="text-sm text-gray-600">
+                                                {imageFile ? imageFile.name : 'Klik untuk upload gambar'}
+                                            </p>
+                                            <p className="text-xs text-gray-400 mt-1">
+                                                JPG, PNG, atau WebP (max 5MB)
+                                            </p>
+                                        </div>
+                                        <input
+                                            type="file"
+                                            accept="image/jpeg,image/jpg,image/png,image/webp"
+                                            onChange={handleImageChange}
+                                            className="hidden"
+                                        />
+                                    </label>
+                                </div>
+                            </div>
+
                             <div>
                                 <label className="block text-gray-700 font-semibold mb-2">
                                     Nama Produk <span className="text-red-500">*</span>
@@ -248,27 +328,13 @@ export default function ManageProducts() {
 
                             <div>
                                 <label className="block text-gray-700 font-semibold mb-2">
-                                    URL Gambar
-                                </label>
-                                <input
-                                    type="url"
-                                    name="image_url"
-                                    value={formData.image_url}
-                                    onChange={handleChange}
-                                    placeholder="https://example.com/image.jpg"
-                                    className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-gray-700 font-semibold mb-2">
                                     Status
                                 </label>
                                 <select
                                     name="status"
                                     value={formData.status}
                                     onChange={handleChange}
-                                    className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
+                                    className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                                 >
                                     <option value="AVAILABLE">AVAILABLE</option>
                                     <option value="UNAVAILABLE">UNAVAILABLE</option>
@@ -278,9 +344,10 @@ export default function ManageProducts() {
                             <div className="flex gap-4">
                                 <button
                                     type="submit"
-                                    className="flex-1 bg-emerald-600 text-white py-2 rounded-lg font-semibold hover:bg-emerald-700 transition"
+                                    disabled={uploadingImage}
+                                    className="flex-1 bg-emerald-600 text-white py-2 rounded-lg font-semibold hover:bg-emerald-700 transition disabled:bg-gray-400"
                                 >
-                                    Simpan
+                                    {uploadingImage ? 'Uploading...' : 'Simpan'}
                                 </button>
                                 <button
                                     type="button"
@@ -298,7 +365,6 @@ export default function ManageProducts() {
                     </div>
                 )}
 
-                {/* Products List */}
                 <div className="space-y-4">
                     <h2 className="text-xl font-bold text-gray-800">Daftar Produk ({products.length})</h2>
 
