@@ -23,6 +23,7 @@ export default function EditUMKM() {
         latitude: '',
         longitude: '',
         image_url: '',
+        opening_hours: '',
         status: 'ACTIVE'
     })
     const [imageFile, setImageFile] = useState<File | null>(null)
@@ -68,6 +69,7 @@ export default function EditUMKM() {
                 latitude: umkm.latitude?.toString() || '',
                 longitude: umkm.longitude?.toString() || '',
                 image_url: umkm.image_url || '',
+                opening_hours: umkm.opening_hours || '',
                 status: umkm.status
             })
             if (umkm.image_url) {
@@ -149,6 +151,7 @@ export default function EditUMKM() {
                     latitude: formData.latitude ? parseFloat(formData.latitude) : null,
                     longitude: formData.longitude ? parseFloat(formData.longitude) : null,
                     image_url: imageUrl || null,
+                    opening_hours: formData.opening_hours || null,
                     status: formData.status,
                     updated_at: new Date().toISOString()
                 })
@@ -322,7 +325,22 @@ export default function EditUMKM() {
                                 required
                             />
                         </div>
-
+                        <div>
+                            <label className="block text-gray-700 font-semibold mb-2">
+                                Jam Buka
+                            </label>
+                            <input
+                                type="text"
+                                name="opening_hours"
+                                value={formData.opening_hours}
+                                onChange={handleChange}
+                                placeholder="Contoh: Senin-Jumat: 08:00-17:00, Sabtu: 09:00-15:00"
+                                className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
+                            />
+                            <p className="text-xs text-gray-500 mt-1">
+                                Isi jam operasional UMKM Anda
+                            </p>
+                        </div>
                         {/* Google Maps Link */}
                         <div>
                             <label className="block text-gray-700 font-semibold mb-2">

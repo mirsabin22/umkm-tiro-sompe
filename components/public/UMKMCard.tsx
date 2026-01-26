@@ -1,7 +1,7 @@
 'use client'
 
 import { UMKM } from '@/types'
-import { MapPin, Phone } from 'lucide-react'
+import { MapPin, Phone, Clock } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -60,6 +60,10 @@ export default function UMKMCard({ umkm }: UMKMCardProps) {
                         <div className="flex items-center text-gray-600 text-sm">
                             <Phone className="w-4 h-4 mr-1 flex-shrink-0" />
                             <span className="truncate">{umkm.phone}</span>
+                        </div>
+                        <div className="flex items-start text-gray-600 text-sm">
+                            <Clock className="w-4 h-4 mr-1 flex-shrink-0 mt-0.5" />
+                            <span className="line-clamp-1">{umkm.opening_hours}</span>
                         </div>
                     </div>
                 </div>

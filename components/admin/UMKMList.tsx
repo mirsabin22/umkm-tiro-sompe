@@ -1,7 +1,7 @@
 'use client'
 
 import { UMKM } from '@/types'
-import { Edit, Trash2, Eye, MapPin, Phone } from 'lucide-react'
+import { Edit, Trash2, Eye, MapPin, Phone, Clock } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -51,8 +51,8 @@ export default function UMKMList({ umkms, onDelete }: UMKMListProps) {
                                         </span>
                                     )}
                                     <span className={`inline-block ml-2 text-xs px-2 py-1 rounded ${umkm.status === 'ACTIVE'
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-red-100 text-red-800'
+                                        ? 'bg-green-100 text-green-800'
+                                        : 'bg-red-100 text-red-800'
                                         }`}>
                                         {umkm.status}
                                     </span>
@@ -73,6 +73,10 @@ export default function UMKMList({ umkms, onDelete }: UMKMListProps) {
                                 <div className="flex items-center text-gray-600 text-sm">
                                     <Phone className="w-4 h-4 mr-2 flex-shrink-0" />
                                     <span>{umkm.phone}</span>
+                                </div>
+                                <div className="flex items-center text-gray-600 text-sm">
+                                    <Clock className="w-4 h-4 mr-2 flex-shrink-0" />
+                                    <span className="line-clamp-1">{umkm.opening_hours}</span>
                                 </div>
                             </div>
 

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { UMKM, Product } from '@/types'
-import { ArrowLeft, MapPin, Phone, ShoppingCart } from 'lucide-react'
+import { ArrowLeft, MapPin, Phone, ShoppingCart, Clock } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { generateWhatsAppMessage, openWhatsApp } from '@/utils/whatsapp'
@@ -103,6 +103,10 @@ export default function UMKMDetail({ umkm, products }: UMKMDetailProps) {
                             <div className="flex items-center text-gray-700">
                                 <Phone className="w-5 h-5 mr-2 flex-shrink-0" />
                                 <span>{umkm.phone}</span>
+                            </div>
+                            <div className="flex items-start text-gray-700">
+                                <Clock className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" />
+                                <span>{umkm.opening_hours}</span>
                             </div>
                         </div>
 

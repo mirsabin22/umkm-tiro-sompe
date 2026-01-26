@@ -9,6 +9,7 @@ export interface UMKM {
     latitude: number | null
     longitude: number | null
     image_url: string | null
+    opening_hours: string | null
     status: 'ACTIVE' | 'INACTIVE'
     created_at: string
     updated_at: string
