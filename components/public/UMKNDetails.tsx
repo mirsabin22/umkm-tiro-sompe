@@ -126,14 +126,16 @@ export default function UMKMDetail({ umkm, products }: UMKMDetailProps) {
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {products.map((product) => (
-                                <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                                    <div className="relative h-40 bg-gray-200">
+                                <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
+                                    {/* Image - Fixed Height */}
+                                    <div className="relative w-full h-40 bg-gray-200 flex-shrink-0">
                                         {product.image_url ? (
                                             <Image
                                                 src={product.image_url}
                                                 alt={product.name}
                                                 fill
                                                 className="object-cover"
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                             />
                                         ) : (
                                             <div className="flex items-center justify-center h-full text-gray-400">
@@ -142,26 +144,34 @@ export default function UMKMDetail({ umkm, products }: UMKMDetailProps) {
                                         )}
                                     </div>
 
-                                    <div className="p-4">
-                                        <h3 className="font-bold text-gray-800 mb-1">{product.name}</h3>
-                                        {product.description && (
-                                            <p className="text-sm text-gray-600 mb-2">{product.description}</p>
-                                        )}
-                                        <p className="text-emerald-600 font-bold mb-3">
-                                            Rp {product.price.toLocaleString('id-ID')}
-                                        </p>
+                                    {/* Content - Flex Grow */}
+                                    <div className="p-4 flex-grow flex flex-col">
+                                        <div className="flex-grow">
+                                            <h3 className="font-bold text-gray-800 mb-1 line-clamp-2 min-h-[3rem]">
+                                                {product.name}
+                                            </h3>
+                                            {product.description && (
+                                                <p className="text-sm text-gray-600 mb-2 line-clamp-2 min-h-[2.5rem]">
+                                                    {product.description}
+                                                </p>
+                                            )}
+                                            <p className="text-emerald-600 font-bold mb-3">
+                                                Rp {product.price.toLocaleString('id-ID')}
+                                            </p>
+                                        </div>
 
-                                        <div className="flex items-center gap-2">
+                                        {/* Quantity Control - Fixed at Bottom */}
+                                        <div className="flex items-center gap-2 mt-auto">
                                             <button
                                                 onClick={() => handleQuantityChange(product.id, (selectedProducts.get(product.id) || 0) - 1)}
-                                                className="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300"
+                                                className="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300 transition"
                                             >
                                                 -
                                             </button>
-                                            <span className="w-8 text-center">{selectedProducts.get(product.id) || 0}</span>
+                                            <span className="w-8 text-center font-semibold">{selectedProducts.get(product.id) || 0}</span>
                                             <button
                                                 onClick={() => handleQuantityChange(product.id, (selectedProducts.get(product.id) || 0) + 1)}
-                                                className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700"
+                                                className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700 transition"
                                             >
                                                 +
                                             </button>
