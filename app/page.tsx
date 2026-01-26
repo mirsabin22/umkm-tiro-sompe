@@ -34,12 +34,12 @@ export default async function Home() {
               <h1 className="text-2xl md:text-3xl font-bold">UMKM TiroSompe</h1>
               <p className="text-emerald-100 text-sm mt-1">Dukung UMKM Lokal Kami</p>
             </div>
-            <Link
+            {/* <Link
               href="/admin"
               className="bg-white text-emerald-600 px-4 py-2 rounded-lg font-semibold hover:bg-emerald-50 transition"
             >
               Admin
-            </Link>
+            </Link> */}
           </div>
         </div>
       </header>

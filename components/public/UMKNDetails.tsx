@@ -183,31 +183,127 @@ export default function UMKMDetail({ umkm, products }: UMKMDetailProps) {
                     )}
                 </div>
 
-                {/* Order Form */}
-                {selectedProducts.size > 0 && (
-                    <div className="bg-white rounded-lg shadow-md p-6">
-                        <h3 className="text-xl font-bold text-gray-800 mb-4">Form Pemesanan</h3>
-
-                        <div className="mb-4">
-                            <label className="block text-gray-700 font-semibold mb-2">
-                                Alamat Pengantaran
-                            </label>
-                            <textarea
-                                value={deliveryAddress}
-                                onChange={(e) => setDeliveryAddress(e.target.value)}
-                                placeholder="Masukkan alamat lengkap pengantaran..."
-                                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                                rows={3}
-                            />
+                {/* Floating Order Button */}
+                {selectedProducts.size > 0 && !showOrderForm && (
+                    <div className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-emerald-600 shadow-2xl p-4 z-40">
+                        <div className="container mx-auto max-w-4xl">
+                            <div className="flex items-center justify-between gap-4">
+                                <div className="flex-1">
+                                    <p className="text-sm text-gray-600">
+                                        {Array.from(selectedProducts.values()).reduce((a, b) => a + b, 0)} item dipilih
+                                    </p>
+                                    <p className="font-bold text-lg text-emerald-600">
+                                        Rp {Array.from(selectedProducts.entries()).reduce((total, [productId, quantity]) => {
+                                            const product = products.find(p => p.id === productId)
+                                            return total + (product ? product.price * quantity : 0)
+                                        }, 0).toLocaleString('id-ID')}
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={() => setShowOrderForm(true)}
+                                    className="bg-emerald-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-emerald-700 transition flex items-center shadow-lg"
+                                >
+                                    <ShoppingCart className="w-5 h-5 mr-2" />
+                                    Pesan Sekarang
+                                </button>
+                            </div>
                         </div>
+                    </div>
+                )}
 
-                        <button
-                            onClick={handleOrder}
-                            className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition flex items-center justify-center"
-                        >
-                            <ShoppingCart className="w-5 h-5 mr-2" />
-                            Pesan via WhatsApp
-                        </button>
+                {/* Order Form Modal */}
+                {showOrderForm && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end md:items-center justify-center p-4">
+                        <div className="bg-white rounded-t-2xl md:rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                            <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between rounded-t-2xl">
+                                <h3 className="text-xl font-bold text-gray-800 flex items-center">
+                                    <ShoppingCart className="w-6 h-6 mr-2 text-emerald-600" />
+                                    Konfirmasi Pesanan
+                                </h3>
+                                <button
+                                    onClick={() => setShowOrderForm(false)}
+                                    className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+                                >
+                                    ×
+                                </button>
+                            </div>
+
+                            <div className="p-6">
+                                {/* Selected Products Summary */}
+                                <div className="mb-6">
+                                    <p className="font-semibold text-gray-800 mb-3 text-base">Pesanan Anda:</p>
+                                    <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                                        {Array.from(selectedProducts.entries()).map(([productId, quantity]) => {
+                                            const product = products.find(p => p.id === productId)
+                                            if (!product) return null
+                                            return (
+                                                <div key={productId} className="flex justify-between items-start">
+                                                    <div className="flex-1">
+                                                        <p className="font-semibold text-gray-800">{product.name}</p>
+                                                        <p className="text-sm text-gray-600">
+                                                            {quantity} x Rp {product.price.toLocaleString('id-ID')}
+                                                        </p>
+                                                    </div>
+                                                    <p className="font-semibold text-emerald-600">
+                                                        Rp {(product.price * quantity).toLocaleString('id-ID')}
+                                                    </p>
+                                                </div>
+                                            )
+                                        })}
+                                        <div className="border-t border-gray-300 pt-3 mt-3 flex justify-between items-center">
+                                            <span className="font-bold text-gray-800 text-lg">Total:</span>
+                                            <span className="font-bold text-xl text-emerald-600">
+                                                Rp {Array.from(selectedProducts.entries()).reduce((total, [productId, quantity]) => {
+                                                    const product = products.find(p => p.id === productId)
+                                                    return total + (product ? product.price * quantity : 0)
+                                                }, 0).toLocaleString('id-ID')}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Delivery Address */}
+                                <div className="mb-6">
+                                    <label className="block text-gray-800 font-bold mb-2 text-base">
+                                        Alamat Pengantaran <span className="text-red-500">*</span>
+                                    </label>
+                                    <textarea
+                                        value={deliveryAddress}
+                                        onChange={(e) => setDeliveryAddress(e.target.value)}
+                                        placeholder="Masukkan alamat lengkap pengantaran...&#10;Contoh: Jl. Veteran No.10, Kelurahan Tiro Sompe"
+                                        className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
+                                        rows={4}
+                                    />
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        Pastikan alamat lengkap dan jelas agar pesanan dapat diantar dengan tepat
+                                    </p>
+                                </div>
+
+                                {/* Order Buttons */}
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => setShowOrderForm(false)}
+                                        className="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-400 transition"
+                                    >
+                                        Batal
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            handleOrder()
+                                            setShowOrderForm(false)
+                                        }}
+                                        disabled={!deliveryAddress.trim()}
+                                        className="flex-1 bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 transition flex items-center justify-center disabled:bg-gray-400 disabled:cursor-not-allowed shadow-lg"
+                                    >
+                                        <ShoppingCart className="w-5 h-5 mr-2" />
+                                        Kirim Pesanan
+                                    </button>
+                                </div>
+                                <p className="text-xs text-center text-gray-500 mt-3">
+                                    Anda akan diarahkan ke WhatsApp untuk menyelesaikan pesanan
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 )}
             </main>
