@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { UMKM } from '@/types'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
 
 export default function EditUMKM() {
     const [formData, setFormData] = useState({
@@ -87,10 +88,10 @@ export default function EditUMKM() {
             .eq('id', params.id)
 
         if (error) {
-            alert('Gagal mengupdate UMKM!')
+            toast('Gagal mengupdate UMKM!')
             console.error(error)
         } else {
-            alert('UMKM berhasil diupdate!')
+            toast('UMKM berhasil diupdate!')
             router.push('/admin/dashboard')
         }
 
@@ -137,7 +138,7 @@ export default function EditUMKM() {
                                 name="name"
                                 value={formData.name}
                                 onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                                 required
                             />
                         </div>
@@ -152,7 +153,7 @@ export default function EditUMKM() {
                                 value={formData.category}
                                 onChange={handleChange}
                                 placeholder="Contoh: Kuliner, Fashion, Kerajinan"
-                                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                             />
                         </div>
 
@@ -165,7 +166,7 @@ export default function EditUMKM() {
                                 value={formData.description}
                                 onChange={handleChange}
                                 rows={3}
-                                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                             />
                         </div>
 
@@ -180,8 +181,7 @@ export default function EditUMKM() {
                                     value={formData.phone}
                                     onChange={handleChange}
                                     placeholder="08123456789"
-                                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                                    required
+                                    className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                                 />
                             </div>
 
@@ -195,7 +195,7 @@ export default function EditUMKM() {
                                     value={formData.whatsapp}
                                     onChange={handleChange}
                                     placeholder="628123456789"
-                                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                    className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                                     required
                                 />
                             </div>
@@ -210,7 +210,7 @@ export default function EditUMKM() {
                                 value={formData.address}
                                 onChange={handleChange}
                                 rows={2}
-                                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                                 required
                             />
                         </div>
@@ -226,7 +226,7 @@ export default function EditUMKM() {
                                     value={formData.latitude}
                                     onChange={handleChange}
                                     placeholder="-4.0098"
-                                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                    className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                                 />
                             </div>
 
@@ -240,7 +240,7 @@ export default function EditUMKM() {
                                     value={formData.longitude}
                                     onChange={handleChange}
                                     placeholder="119.6231"
-                                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                    className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                                 />
                             </div>
                         </div>
@@ -255,7 +255,7 @@ export default function EditUMKM() {
                                 value={formData.image_url}
                                 onChange={handleChange}
                                 placeholder="https://example.com/image.jpg"
-                                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                             />
                         </div>
 
@@ -267,7 +267,7 @@ export default function EditUMKM() {
                                 name="status"
                                 value={formData.status}
                                 onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                             >
                                 <option value="ACTIVE">ACTIVE</option>
                                 <option value="INACTIVE">INACTIVE</option>

@@ -7,6 +7,7 @@ import { UMKM, Product } from '@/types'
 import { Plus, LogOut, Store, Package } from 'lucide-react'
 import Link from 'next/link'
 import UMKMList from '@/components/admin/UMKMList'
+import toast from 'react-hot-toast'
 
 export default function AdminDashboard() {
     const [umkms, setUmkms] = useState<UMKM[]>([])
@@ -54,10 +55,10 @@ export default function AdminDashboard() {
             .eq('id', id)
 
         if (error) {
-            alert('Gagal menghapus UMKM!')
+            toast.error('Gagal menghapus UMKM!')
             console.error(error)
         } else {
-            alert('UMKM berhasil dihapus!')
+            toast.success('UMKM berhasil dihapus!')
             fetchUMKMs()
         }
     }

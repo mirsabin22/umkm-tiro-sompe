@@ -7,6 +7,7 @@ import { UMKM, Product } from '@/types'
 import { ArrowLeft, Plus, Edit, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
+import toast from 'react-hot-toast'
 
 export default function ManageProducts() {
     const [umkm, setUmkm] = useState<UMKM | null>(null)
@@ -45,7 +46,7 @@ export default function ManageProducts() {
             .single()
 
         if (umkmError || !umkmData) {
-            alert('UMKM tidak ditemukan!')
+            toast('UMKM tidak ditemukan!')
             router.push('/admin/dashboard')
             return
         }
@@ -97,10 +98,10 @@ export default function ManageProducts() {
         }
 
         if (error) {
-            alert('Gagal menyimpan produk!')
+            toast('Gagal menyimpan produk!')
             console.error(error)
         } else {
-            alert('Produk berhasil disimpan!')
+            toast('Produk berhasil disimpan!')
             setShowForm(false)
             setEditingProduct(null)
             resetForm()
@@ -212,7 +213,7 @@ export default function ManageProducts() {
                                     name="name"
                                     value={formData.name}
                                     onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                    className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                                     required
                                 />
                             </div>
@@ -226,7 +227,7 @@ export default function ManageProducts() {
                                     value={formData.description}
                                     onChange={handleChange}
                                     rows={2}
-                                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                    className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                                 />
                             </div>
 
@@ -240,7 +241,7 @@ export default function ManageProducts() {
                                     value={formData.price}
                                     onChange={handleChange}
                                     placeholder="15000"
-                                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                    className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                                     required
                                 />
                             </div>
@@ -255,7 +256,7 @@ export default function ManageProducts() {
                                     value={formData.image_url}
                                     onChange={handleChange}
                                     placeholder="https://example.com/image.jpg"
-                                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                    className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                                 />
                             </div>
 
@@ -267,7 +268,7 @@ export default function ManageProducts() {
                                     name="status"
                                     value={formData.status}
                                     onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                    className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                                 >
                                     <option value="AVAILABLE">AVAILABLE</option>
                                     <option value="UNAVAILABLE">UNAVAILABLE</option>
@@ -333,8 +334,8 @@ export default function ManageProducts() {
                                             Rp {product.price.toLocaleString('id-ID')}
                                         </p>
                                         <span className={`inline-block text-xs px-2 py-1 rounded mb-3 ${product.status === 'AVAILABLE'
-                                                ? 'bg-green-100 text-green-800'
-                                                : 'bg-red-100 text-red-800'
+                                            ? 'bg-green-100 text-green-800'
+                                            : 'bg-red-100 text-red-800'
                                             }`}>
                                             {product.status}
                                         </span>

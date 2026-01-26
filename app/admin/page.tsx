@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Lock, User } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
+import toast from 'react-hot-toast'
 
 export default function AdminLogin() {
     const [email, setEmail] = useState('')
@@ -16,15 +18,28 @@ export default function AdminLogin() {
         setLoading(true)
         setError('')
 
-        // Simple authentication (in production, use proper auth)
-        // Default credentials: admin@tirosompe.com / admin123
-        if (email === 'admin@tirosompe.com' && password === 'admin123') {
-            // Set session (in production, use proper session management)
-            localStorage.setItem('admin_session', 'true')
-            router.push('/admin/dashboard')
-        } else {
-            setError('Email atau password salah!')
+        // Authenticate with Supabase
+        const supabase = createClient()
+        const { data, error } = await supabase
+            .from('admin_users')
+            .select('*')
+            .eq('email', email)
+            .eq('password_hash', password) // Note: In production, use proper password hashing
+            .single()
+
+        if (error || !data) {
+            toast.error('Email atau password salah!')
+            setLoading(false)
+            return
         }
+
+        // Set session
+        localStorage.setItem('admin_session', 'true')
+        localStorage.setItem('admin_email', data.email)
+        localStorage.setItem('admin_name', data.name)
+
+        toast.success('Login berhasil!')
+        router.push('/admin/dashboard')
 
         setLoading(false)
     }
@@ -57,8 +72,8 @@ export default function AdminLogin() {
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder="admin@tirosompe.com"
-                                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                placeholder="Email Admin"
+                                className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-lg text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                                 required
                             />
                         </div>
@@ -75,7 +90,7 @@ export default function AdminLogin() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
-                                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-lg text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
                                 required
                             />
                         </div>
@@ -88,10 +103,6 @@ export default function AdminLogin() {
                     >
                         {loading ? 'Memproses...' : 'Login'}
                     </button>
-
-                    <div className="text-center text-sm text-gray-600">
-                        <p>Default: admin@tirosompe.com / admin123</p>
-                    </div>
                 </form>
 
                 <div className="mt-6 text-center">
