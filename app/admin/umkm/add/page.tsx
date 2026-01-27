@@ -243,7 +243,6 @@ export default function AddUMKM() {
                                     onChange={handleChange}
                                     placeholder="08123456789"
                                     className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
-                                    required
                                 />
                             </div>
 
