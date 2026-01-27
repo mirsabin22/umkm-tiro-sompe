@@ -171,22 +171,25 @@ export default function UMKMDetail({ umkm, products }: UMKMDetailProps) {
                                             </p>
                                         </div>
 
-                                        {/* Quantity Control - Fixed at Bottom */}
-                                        <div className="flex items-center gap-2 mt-auto">
-                                            <button
-                                                onClick={() => handleQuantityChange(product.id, (selectedProducts.get(product.id) || 0) - 1)}
-                                                className="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300 transition"
-                                            >
-                                                -
-                                            </button>
-                                            <span className="w-8 text-center font-semibold">{selectedProducts.get(product.id) || 0}</span>
-                                            <button
-                                                onClick={() => handleQuantityChange(product.id, (selectedProducts.get(product.id) || 0) + 1)}
-                                                className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700 transition"
-                                            >
-                                                +
-                                            </button>
-                                        </div>
+                                        {/* Quantity Control - Only for catalog type */}
+                                        {umkm.order_type === 'catalog' && (
+                                            <div className="flex items-center gap-2 mt-auto">
+                                                <button
+                                                    onClick={() => handleQuantityChange(product.id, (selectedProducts.get(product.id) || 0) - 1)}
+                                                    className="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300 transition"
+                                                >
+                                                    -
+                                                </button>
+                                                <span className="w-8 text-center font-semibold">{selectedProducts.get(product.id) || 0}</span>
+                                                <button
+                                                    onClick={() => handleQuantityChange(product.id, (selectedProducts.get(product.id) || 0) + 1)}
+                                                    className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700 transition"
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
+                                        )}
+
                                     </div>
                                 </div>
                             ))}

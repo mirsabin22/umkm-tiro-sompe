@@ -24,6 +24,7 @@ export default function EditUMKM() {
         longitude: '',
         image_url: '',
         opening_hours: '',
+        order_type: 'catalog',
         status: 'ACTIVE'
     })
     const [imageFile, setImageFile] = useState<File | null>(null)
@@ -70,6 +71,7 @@ export default function EditUMKM() {
                 longitude: umkm.longitude?.toString() || '',
                 image_url: umkm.image_url || '',
                 opening_hours: umkm.opening_hours || '',
+                order_type: umkm.order_type || 'catalog',
                 status: umkm.status
             })
             if (umkm.image_url) {
@@ -152,6 +154,7 @@ export default function EditUMKM() {
                     longitude: formData.longitude ? parseFloat(formData.longitude) : null,
                     image_url: imageUrl || null,
                     opening_hours: formData.opening_hours || null,
+                    order_type: formData.order_type,
                     status: formData.status,
                     updated_at: new Date().toISOString()
                 })
@@ -388,7 +391,23 @@ export default function EditUMKM() {
                                 />
                             </div>
                         </div>
-
+                        <div>
+                            <label className="block text-gray-700 font-semibold mb-2">
+                                Tipe Pemesanan <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                                name="order_type"
+                                value={formData.order_type}
+                                onChange={handleChange}
+                                className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
+                            >
+                                <option value="catalog">Katalog dengan Form Pemesanan</option>
+                                <option value="whatsapp_only">Direct WhatsApp Only</option>
+                            </select>
+                            <p className="text-xs text-gray-500 mt-1">
+                                Katalog: Pelanggan bisa pesan via form. WhatsApp Only: Pelanggan hanya bisa hubungi via WhatsApp langsung
+                            </p>
+                        </div>
                         <div>
                             <label className="block text-gray-700 font-semibold mb-2">
                                 Status

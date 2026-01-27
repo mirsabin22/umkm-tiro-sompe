@@ -11,6 +11,7 @@ export interface UMKM {
     image_url: string | null
     opening_hours: string | null
     status: 'ACTIVE' | 'INACTIVE'
+    order_type: 'catalog' | 'whatsapp_only'
     created_at: string
     updated_at: string
 }
