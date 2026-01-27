@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import { UMKM, Product } from '@/types'
 import { Plus, LogOut, Store, Package } from 'lucide-react'
@@ -74,16 +75,26 @@ export default function AdminDashboard() {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
-            <header className="bg-emerald-600 text-white shadow-lg">
+            {/* Header */}
+            <header className="bg-white shadow-md border-b-4 border-emerald-500">
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex justify-between items-center">
-                        <div>
-                            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-                            <p className="text-emerald-100 text-sm">Kelola UMKM Tiro Sompe</p>
+                        <div className="flex items-center gap-4">
+                            <Image
+                                src="/logo.png"
+                                alt="UMKM-GO Logo"
+                                width={80}
+                                height={80}
+                                className="object-contain"
+                            />
+                            <div>
+                                <h1 className="text-2xl font-bold text-emerald-700">Admin Dashboard</h1>
+                                <p className="text-gray-600 text-sm">Kelola UMKM-GO Tirosompe</p>
+                            </div>
                         </div>
                         <button
                             onClick={handleLogout}
-                            className="flex items-center bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition"
+                            className="flex items-center bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
                         >
                             <LogOut className="w-4 h-4 mr-2" />
                             Logout
