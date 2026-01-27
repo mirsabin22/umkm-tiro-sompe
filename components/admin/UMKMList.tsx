@@ -72,7 +72,7 @@ export default function UMKMList({ umkms, onDelete }: UMKMListProps) {
                                 </div>
                                 <div className="flex items-center text-gray-600 text-sm">
                                     <Phone className="w-4 h-4 mr-2 flex-shrink-0" />
-                                    <span>{umkm.phone}</span>
+                                    <span>{umkm.whatsapp}</span>
                                 </div>
                                 <div className="flex items-center text-gray-600 text-sm">
                                     <Clock className="w-4 h-4 mr-2 flex-shrink-0" />
