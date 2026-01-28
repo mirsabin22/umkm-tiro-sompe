@@ -75,7 +75,7 @@ export default async function Home() {
                 UMKM-GO
               </h1>
               <p className="text-gray-600 text-sm">
-                Kelurahan Tirosompe
+                Kelurahan Tiro Sompe
               </p>
             </div>
           </div>
@@ -87,11 +87,11 @@ export default async function Home() {
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              Dukung UMKM Lokal Tirosompe
+              Dukung UMKM Lokal Tiro Sompe
             </h2>
             <p className="text-lg md:text-xl text-emerald-100 mb-8">
               Platform digitalisasi UMKM untuk memudahkan Anda menemukan dan
-              memesan produk lokal terbaik dari Kelurahan Tirosompe, Kota Parepare
+              memesan produk lokal terbaik dari Kelurahan Tiro Sompe, Kota Parepare
             </p>
 
             <div className="flex flex-wrap justify-center gap-4">
@@ -141,7 +141,7 @@ export default async function Home() {
               icon={<MapPin className="w-12 h-12 opacity-80" />}
               value={stats.totalCategories}
               label="Kategori"
-              description="Beragam jenis usaha di Tirosompe"
+              description="Beragam jenis usaha di Tiro Sompe"
               color="orange"
             />
           </div>
@@ -155,7 +155,7 @@ export default async function Home() {
             Daftar UMKM
           </h2>
           <p className="text-gray-600">
-            Temukan produk lokal terbaik dari Kelurahan Tirosompe
+            Temukan produk lokal terbaik dari Kelurahan Tiro Sompe
           </p>
         </div>
 
@@ -176,7 +176,7 @@ export default async function Home() {
       <footer className="bg-gray-800 text-white py-8 mt-16">
         <div className="container mx-auto px-4 text-center">
           <p className="mb-2">
-            © 2025 Kelurahan Tirosompe, Kota Parepare
+            © 2025 Kelurahan Tiro Sompe, Kota Parepare
           </p>
           <p className="text-sm text-gray-400">
             Dikembangkan dalam Program KKN Unhas Gelombang 115

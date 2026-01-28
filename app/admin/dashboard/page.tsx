@@ -89,7 +89,7 @@ export default function AdminDashboard() {
                             />
                             <div>
                                 <h1 className="text-2xl font-bold text-emerald-700">Admin Dashboard</h1>
-                                <p className="text-gray-600 text-sm">Kelola UMKM-GO Tirosompe</p>
+                                <p className="text-gray-600 text-sm">Kelola UMKM-GO Tiro Sompe</p>
                             </div>
                         </div>
                         <button
