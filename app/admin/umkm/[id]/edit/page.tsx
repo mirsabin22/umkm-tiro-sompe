@@ -7,7 +7,7 @@ import { UMKM } from '@/types'
 import { ArrowLeft, Upload, MapPin } from 'lucide-react'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
-import { uploadImage, validateImageFile } from '@/utils/imageupload'
+import { uploadImage, validateImageFile } from '@/utils/image/imageUpload'
 import { parseGoogleMapsLink, isValidGoogleMapsLink } from '@/utils/mapsParser'
 import Image from 'next/image'
 

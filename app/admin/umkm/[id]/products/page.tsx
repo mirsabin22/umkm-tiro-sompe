@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { UMKM, Product } from '@/types'
 import { ArrowLeft, Plus, Edit, Trash2, Upload } from 'lucide-react'
-import { uploadImage, validateImageFile } from '@/utils/imageupload'
+import { uploadImage, validateImageFile } from '@/utils/image/imageUpload'
 import Link from 'next/link'
 import Image from 'next/image'
 import toast from 'react-hot-toast'
@@ -408,8 +408,8 @@ export default function ManageProducts() {
                                                 Rp {product.price.toLocaleString('id-ID')}
                                             </p>
                                             <span className={`inline-block text-xs px-2 py-1 rounded mb-3 ${product.status === 'AVAILABLE'
-                                                    ? 'bg-green-100 text-green-800'
-                                                    : 'bg-red-100 text-red-800'
+                                                ? 'bg-green-100 text-green-800'
+                                                : 'bg-red-100 text-red-800'
                                                 }`}>
                                                 {product.status}
                                             </span>
