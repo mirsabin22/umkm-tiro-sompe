@@ -90,22 +90,6 @@ export default function PWAInstallPrompt() {
                         </p>
                     </div>
                 </div>
-
-                <div className="space-y-2 mb-4 text-sm text-gray-600">
-                    <div className="flex items-center gap-2">
-                        <span className="text-emerald-600">✓</span>
-                        <span>Akses offline</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className="text-emerald-600">✓</span>
-                        <span>Notifikasi pesanan</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className="text-emerald-600">✓</span>
-                        <span>Lebih cepat dan ringan</span>
-                    </div>
-                </div>
-
                 <button
                     onClick={handleInstall}
                     className="w-full bg-emerald-600 text-white py-3 rounded-lg font-bold hover:bg-emerald-700 transition flex items-center justify-center gap-2"
