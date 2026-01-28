@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ToastProvider from "@/components/ToastProvider";
@@ -14,20 +14,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "UMKM Tiro Sompe",
-  description: "Platform digitalisasi UMKM Kelurahan Tiro Sompe",
+  title: "UMKM-GO Tirosompe",
+  description: "Platform digitalisasi UMKM Kelurahan Tirosompe",
   manifest: "/manifest.json",
-  themeColor: "#10b981",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "UMKM Tiro Sompe",
+    title: "UMKM-GO",
   },
   icons: {
     icon: "/icon-192x192.png",
     apple: "/icon-192x192.png",
   },
 };
+
+export const viewport: Viewport = {
+  themeColor: "#10b981",
+}
 
 export default function RootLayout({
   children,
