@@ -5,7 +5,20 @@ import { UMKM } from '@/types'
 import UMKMCard from '@/components/public/UMKMCard'
 import StatCard from '@/components/public/StatCard'
 import { Store, Package, MapPin } from 'lucide-react'
+import type { Metadata } from 'next'
 
+export const metadata: Metadata = {
+  title: 'UMKM-GO Tirosompe - Platform Digitalisasi UMKM',
+  description: 'Platform digitalisasi UMKM Kelurahan Tirosompe, Kota Parepare. Temukan dan pesan produk lokal terbaik dari berbagai UMKM di Tirosompe. Program KKN Unhas Gelombang 115.',
+  keywords: ['UMKM Tirosompe', 'UMKM Parepare', 'Produk Lokal Parepare', 'UMKM-GO', 'KKN Unhas', 'Kelurahan Tirosompe'],
+  openGraph: {
+    title: 'UMKM-GO Tirosompe',
+    description: 'Platform digitalisasi UMKM Kelurahan Tirosompe, Kota Parepare',
+    type: 'website',
+    locale: 'id_ID',
+    siteName: 'UMKM-GO Tirosompe',
+  },
+}
 export const dynamic = 'force-dynamic'
 
 async function getUMKMs() {
