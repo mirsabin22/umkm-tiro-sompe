@@ -313,7 +313,7 @@ export default function ManageProducts() {
 
                             <div>
                                 <label className="block text-gray-700 font-semibold mb-2">
-                                    Harga <span className="text-red-500">*</span>
+                                    Harga <span className="text-red-500"></span>
                                 </label>
                                 <input
                                     type="number"
@@ -322,7 +322,6 @@ export default function ManageProducts() {
                                     onChange={handleChange}
                                     placeholder="15000"
                                     className="w-full border-2 border-gray-300 rounded-lg p-3 text-gray-900 text-base font-medium bg-white placeholder:text-gray-400 placeholder:font-normal focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
-                                    required
                                 />
                             </div>
 

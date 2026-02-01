@@ -236,7 +236,7 @@ export default function AddUMKM() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-gray-700 font-semibold mb-2">
-                                    No. Telepon <span className="text-red-500">*</span>
+                                    No. Telepon <span className="text-red-500"></span>
                                 </label>
                                 <input
                                     type="text"
