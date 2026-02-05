@@ -332,7 +332,7 @@ Kontribusi sangat diterima! Ikuti langkah berikut:
 
 ---
 
-## 🐛 Known Issues & Roadmap
+## 🐛 Known Issues 
 
 ### Current Issues
 - [ ] Image upload masih manual via Supabase dashboard
@@ -341,16 +341,16 @@ Kontribusi sangat diterima! Ikuti langkah berikut:
 
 ## 👥 Team
 
-**Developer:** M Mirsa Bintang 
+**Developer:** M Mirsa Bintang Muharram
 **Institution:** Universitas Hasanuddin  
-**Program:** KKN Tematik Gelombang 115  
+**Program:** KKN Tematik novasi Daerah Gelombang 115  
 **Location:** Kelurahan Tirosompe, Kota Parepare
 
 ### Contact
 
-- **Email:** your.email@example.com
-- **GitHub:** [@yourusername](https://github.com/yourusername)
-- **LinkedIn:** [Your Name](https://linkedin.com/in/yourprofile)
+- **Email:** mirsabintang0@gmail.xom
+- **GitHub:** [@mirsabin22](https://github.com/mirsabin22)
+- **LinkedIn:** [M Mirsa Bintang Muharram](https://www.linkedin.com/in/mmirsabintangmuharram/)
 
 ---
 
